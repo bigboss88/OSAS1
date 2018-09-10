@@ -7,7 +7,7 @@ struct node{
 }node;
 
 struct node* init(struct Proc *P){
-	 struct node *n = malloc(sizeof(struct node));
+	 struct node *n = malloc(sizeof(struct node*));
 	 n->process=P;
 	 n->next=NULL;
 	 return n;
@@ -42,6 +42,39 @@ struct node* insert(struct node *head, struct Proc *P){
 	}
 }
 
+ int remove(struct node *head, char job){
+	struct node *cur = head;
+	struct node *prev = NULL;
+
+	while(cur != NULL){
+		if(cur->process->job == job){ // found it
+			break;
+		}
+		cur = prev;
+		cur = cur->next;
+	}
+
+	if(prev == NULL){ // at front
+		head = cur->next;
+		PROC_destroy(cur->process);
+		return 1;
+	}
+
+	else if(cur->next == NULL){ // at end
+		prev->next =NULL;
+		PROC_destroy(cur->process);
+		return 1;
+	}
+	else if(cur->next != NULL &&prev != NULL){ //somewhere in middle
+		prev->next = cur->next;
+		PROC_destroy(cur->process);
+		return 1;
+	}
+	else{ //if it's not in the list
+		return 0;
+	}
+}
+
 struct node sort(struct node *head){
 
 }
@@ -54,6 +87,7 @@ void delete_list(struct node *head){
 		PROC_destroy(temp->process);
 		free(temp);
 	}
+	free(head);
 }
 
 void print_list(struct node *head){

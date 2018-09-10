@@ -6,18 +6,21 @@
 #include "process.h"
 
 
-struct Proc* PROC_init(char j, int d, int a,char *u){
+struct Proc* PROC_init(char *u,char j, int a, int d){
   struct Proc *P;
   P = malloc(sizeof(struct Proc*));
   if(P == NULL) return P; //failed
   P->job = j;
   P->dur = d;
   P->arrive =a;
+  P->user = malloc(sizeof(u)); 
   P->user = strdup(u);
   return P;
 }
 
 void PROC_destroy(struct Proc *P){
+  //free(*P);
+  free(P->user);
   free(P);
 }
 
@@ -34,5 +37,5 @@ int PROC_work(struct Proc *P){
 }
 
 void print_PROC(struct Proc *P){
-	printf("\n%s	%c 	%d 	%d \n", P->user,P->job,P->dur,P->arrive);
+	printf("\n%s	%c 	%d 	%d \n", P->user,P->job,P->arrive,P->dur);
 }

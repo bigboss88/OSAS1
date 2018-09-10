@@ -11,7 +11,7 @@ struct Proc{
   char *user;
 };
 //return new Proc, null otherwise
-struct Proc* PROC_init(char j, int d, int a,char *u);
+struct Proc* PROC_init(char *u,char j, int a, int d);
 void PROC_destroy(struct Proc *P );
 // returns 1 if it has arrived 0 if not
 int PROC_arrived( struct Proc *P, int time);
