@@ -14,9 +14,19 @@ int main(){
 	char job;
 	int arrive;
 	int dur;
+	struct Proc **procs;
+	i = 0;
 	while(scanf("%s %c %d %d",user,&job,&arrive,&dur)>3){
 		struct Proc *test = PROC_init(user,job,arrive,dur);
-		print_PROC(test);
-		PROC_destroy(test);
+		printf("%d\n",i );
+		procs+i = test;
+		i++;
+		//PROC_destroy(test);
+	}
+	int k =0;
+	for(k;k<i;k++){
+		printf("%d\n",k );
+		print_PROC((procs+k));
+		PROC_destroy((procs+k));
 	}
 }

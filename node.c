@@ -26,7 +26,7 @@ struct node* insert(struct node *head, struct Proc *P){
 	if(prev==NULL){ // at front
 		struct node *nhead = init(P);
 		nhead->next = cur;
-		head = nhead; 
+		head = nhead;
 		return head;
 	}
 	else if(cur==NULL){ //at end
