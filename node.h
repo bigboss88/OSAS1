@@ -3,7 +3,10 @@
 #ifndef node_h
 #define node_h
 struct node{
-	struct Proc *process;
+	char* user;
+	char job;
+	int arr;
+	int dur;
 	struct node *next;
 }node;
 #endif

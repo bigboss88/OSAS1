@@ -1,86 +1,56 @@
 #include <stdlib.h>
 #include <string.h>
-#include "process.h"
+//#include "process.h"
 #include "node.h"
 #include <stdio.h>
 
-struct node* init(struct Proc *P){
-	 struct node *n = malloc(sizeof(struct node*));
-	 n->process=P;
+struct node* init(char *u,char j, int a,int d){
+	 struct node *n = (struct node *) malloc(sizeof(struct node));
+	 n->user = strdup(u);
+	 n->job = j;
+	 n->arr=a;
+	 n->dur=d;
 	 n->next=NULL;
-	 printf("Ini list\n");
+	 //printf("Ini list\n");
 	 return n;
 }
-struct node* insert(struct node *head, struct Proc *P){
+//inserts node at end of list
+struct node* insert(struct node *head, struct node *nnode){
 	struct node *cur = head;
-	struct node *prev = NULL;
-	printf("in insert\n");
-	while(cur!=NULL){
-		printf("In while loop\n");
-		if(P->dur >= cur->process->dur){ //found location to add
-			printf("breaking while loop\n");
-			break;
-		}
-		printf("prev =cur\n");
-		prev=cur;
-
-		cur=cur->next;
-		printf("1\n");
+	struct node *prev = cur;
+	while(cur != NULL){
+		prev =  cur;
+		cur = cur->next;
 	}
-
-	if(prev==NULL){ // at front
-		struct node *nhead = init(P);
-		nhead->next = cur;
-		head = nhead;
-		return head;
-		printf("2\n");
-	}
-	else if(cur==NULL){ //at end
-		prev->next = init(P);
-		return head;
-		printf("3\n");
-	}
-
-	else{ //Somewhere in middle
-		struct node *nnode = init(P);
-		prev->next = nnode;
-		nnode->next = cur;
-		return head;
-		printf("4\n");
-	}
+	prev->next = nnode;
+	return head;
+	
 }
 
- int pop(struct node *head, char job){
-	struct node *cur = head;
-	struct node *prev = NULL;
+ int pop(struct node **head, char job){
+	struct node *cur = *head;
+	struct node *prev = cur;
+	if(cur!= NULL && cur->job == job){
+		struct node *tmp =cur;
+		cur=cur->next;
+		*head = cur;
+		free(tmp);
 
-	while(cur != NULL){
-		if(cur->process->job == job){ // found it
-			break;
-		}
-		cur = prev;
+		return 1;
+	}
+
+	while(cur!=NULL && cur->job !=job){
+		prev = cur;
 		cur = cur->next;
 	}
 
-	if(prev == NULL){ // at front
-		head = cur->next;
-		PROC_destroy(cur->process);
-		return 1;
-	}
-
-	else if(cur->next == NULL){ // at end
-		prev->next =NULL;
-		PROC_destroy(cur->process);
-		return 1;
-	}
-	else if(cur->next != NULL &&prev != NULL){ //somewhere in middle
-		prev->next = cur->next;
-		PROC_destroy(cur->process);
-		return 1;
-	}
-	else{ //if it's not in the list
+	if(cur == NULL){
 		return 0;
 	}
+
+	prev->next = cur->next;
+	free(cur);
+	return 1;
 }
 
 struct node sort(struct node *head){
@@ -92,7 +62,6 @@ void delete_list(struct node *head){
 	while(head!=NULL){
 		temp =head;
 		head = head->next;
-		PROC_destroy(temp->process);
 		free(temp);
 	}
 	free(head);
@@ -101,7 +70,8 @@ void delete_list(struct node *head){
 void print_list(struct node *head){
 	struct node *cur = head;
 	while(cur!=NULL){
-		print_PROC(cur->process);
+		printf("%s %c %d %d \n",cur->user,cur->job,cur->arr,cur->dur);
 		cur=cur->next;
 	}
+	//printf("Done priniting\n");
 }
