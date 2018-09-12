@@ -1,6 +1,7 @@
 #include "process.h"
 #include "node.h"
 #include <stdio.h>
+#include <stdlib.h>
 //Test
 int main(){
 	char dump[100];
@@ -14,19 +15,24 @@ int main(){
 	char job;
 	int arrive;
 	int dur;
-	struct Proc **procs;
 	i = 0;
+	struct node *in;
+	
 	while(scanf("%s %c %d %d",user,&job,&arrive,&dur)>3){
 		struct Proc *test = PROC_init(user,job,arrive,dur);
-		printf("%d\n",i );
-		procs+i = test;
-		i++;
-		//PROC_destroy(test);
+		print_PROC(test);
+		if(i==0){
+			in = init(test);
+		}
+		else{
+			 in = insert(in,test);
+		}
+		//i++;
 	}
-	int k =0;
-	for(k;k<i;k++){
-		printf("%d\n",k );
-		print_PROC((procs+k));
-		PROC_destroy((procs+k));
-	}
+	printf("It work?\n");
+	print_PROC(in->process); 
+	printf("Blah\n");
+
+	print_list(in);
+	delete_list( in);
 }

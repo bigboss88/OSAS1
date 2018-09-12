@@ -1,26 +1,31 @@
 #include <stdlib.h>
 #include <string.h>
 #include "process.h"
-struct node{
-	struct Proc *process;
-	struct node *next;
-}node;
+#include "node.h"
+#include <stdio.h>
 
 struct node* init(struct Proc *P){
 	 struct node *n = malloc(sizeof(struct node*));
 	 n->process=P;
 	 n->next=NULL;
+	 printf("Ini list\n");
 	 return n;
 }
 struct node* insert(struct node *head, struct Proc *P){
 	struct node *cur = head;
 	struct node *prev = NULL;
+	printf("in insert\n");
 	while(cur!=NULL){
-		if(P->dur <= cur->process->dur){ //found location to add
+		printf("In while loop\n");
+		if(P->dur >= cur->process->dur){ //found location to add
+			printf("breaking while loop\n");
 			break;
 		}
+		printf("prev =cur\n");
 		prev=cur;
+
 		cur=cur->next;
+		printf("1\n");
 	}
 
 	if(prev==NULL){ // at front
@@ -28,10 +33,12 @@ struct node* insert(struct node *head, struct Proc *P){
 		nhead->next = cur;
 		head = nhead;
 		return head;
+		printf("2\n");
 	}
 	else if(cur==NULL){ //at end
 		prev->next = init(P);
 		return head;
+		printf("3\n");
 	}
 
 	else{ //Somewhere in middle
@@ -39,10 +46,11 @@ struct node* insert(struct node *head, struct Proc *P){
 		prev->next = nnode;
 		nnode->next = cur;
 		return head;
+		printf("4\n");
 	}
 }
 
- int remove(struct node *head, char job){
+ int pop(struct node *head, char job){
 	struct node *cur = head;
 	struct node *prev = NULL;
 
