@@ -1,2 +1,2 @@
 all:
-	gcc node.c main.c -o out
+	gcc  node.c user.c main.c -o out

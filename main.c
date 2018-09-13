@@ -1,5 +1,6 @@
 //#include "process.h"
 #include "node.h"
+#include "user.h"
 #include <stdio.h>
 #include <stdlib.h>
 //Test
@@ -18,15 +19,18 @@ int main(){
 	i = 0;
 	struct node *in;
 	struct node *test;
+	struct user *user_list;
 	int min =0;
 	while(scanf("%s %c %d %d",user,&job,&arrive,&dur)>3){
 		if(i==0){
 			in = init(user,job,arrive,dur);
+			user_list = init_USER(user,arrive);
 			min=arrive;
 		}
 		else{
 			test = init(user,job,arrive,dur);
 			 in = insert(in,test);
+			 insert_USER(user_list,user,arrive);
 			 if(arrive < min){
 			 	min = arrive;
 			 }
@@ -59,9 +63,11 @@ int main(){
 			if(cur->dur == 1){ // if this job is done remove it for some reason it will work on 0 so I set to 1
 				struct node *tmp = (struct node *) malloc(sizeof(struct node));
 				tmp =cur;
+				setTime(user_list,tmp->user,time+1);
 				cur = cur->next;
 				//printf("POP %c \n",tmp->job);
 				pop(&in,tmp->job);
+
 				//print_list(in);
 				//printf("Done POPing you\n");
 			}
@@ -78,13 +84,12 @@ int main(){
 		time++;
 	}
 	printf("%d 	IDLE\n", time++);
-
-
-
-
+	printf("\nSummary\n");
+	print_USERlist(user_list);
 
 	//free(cur);
 	//free(work);
 	// /free(tmp);
 	delete_list(in);
+	delete_USERlist(user_list);
 }
