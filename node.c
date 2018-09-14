@@ -5,27 +5,48 @@
 #include <stdio.h>
 
 struct node* init(char *u,char j, int a,int d){
-	 struct node *n = (struct node *) malloc(sizeof(struct node));
+	 struct node *n = (struct node*) malloc(sizeof(node));
 	 n->user = strdup(u);
 	 n->job = j;
 	 n->arr=a;
 	 n->dur=d;
 	 n->next=NULL;
-	 //printf("Ini list\n");
+	// printf("Ini list\n");
+	 //printf("%d\n",n->dur );
 	 return n;
 }
 //inserts node at end of list
-struct node* insert(struct node *head, struct node *nnode){
-	struct node *cur = head;
-	struct node *prev = cur;
-	while(cur != NULL){
-		prev =  cur;
+int insert(struct node **head, struct node *nnode){
+	struct node *cur = *head;
+	struct node *prev = NULL;
+	while(cur!= NULL){
+
+		if(nnode->arr < cur->arr){
+			break; // found location to put user
+		}
+		prev = cur;
 		cur = cur->next;
 	}
-	prev->next = nnode;
-	return head;
-	
+
+	if(prev == NULL){ // add to front 
+		nnode->next = *head;
+		*head = nnode;
+		return 1;
+	}
+
+	else if(cur == NULL){ // at end
+		prev->next = nnode;
+		return 1;
+	}
+
+	else if(cur!=NULL && prev != NULL){ // in middle
+		prev->next = nnode;
+		nnode->next = cur;
+		return 1;
+	}
+	return 0; //something went wrong
 }
+
 
  int pop(struct node **head, char job){
 	struct node *cur = *head;
@@ -53,22 +74,20 @@ struct node* insert(struct node *head, struct node *nnode){
 	return 1;
 }
 
-struct node sort(struct node *head){
 
-}
-
-void delete_list(struct node *head){
-	struct node* temp;
-	while(head!=NULL){
-		temp =head;
-		head = head->next;
-		free(temp);
+void delete_list(struct node **head){
+	struct node* cur = *head;
+	struct node *tmp;
+	while(cur!=NULL){
+		tmp = cur->next;
+		free(cur);
+		cur=tmp;
 	}
-	free(head);
+	*head=NULL;
 }
 
-void print_list(struct node *head){
-	struct node *cur = head;
+void print_list(struct node **head){
+	struct node *cur = *head;
 	while(cur!=NULL){
 		printf("%s %c %d %d \n",cur->user,cur->job,cur->arr,cur->dur);
 		cur=cur->next;

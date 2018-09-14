@@ -17,34 +17,39 @@ int main(){
 	int arrive;
 	int dur;
 	i = 0;
-	struct node *in;
+	struct node **job_list = (struct node**) malloc(sizeof(struct node));
 	struct node *test;
-	struct user *user_list;
+	struct user **user_list = (struct user**) malloc(sizeof(struct user));
 	int min =0;
 	while(scanf("%s %c %d %d",user,&job,&arrive,&dur)>3){
 		if(i==0){
-			in = init(user,job,arrive,dur);
-			user_list = init_USER(user,arrive);
+			//printf("Trying to init\n");
+			*job_list = init(user,job,arrive,dur);
+			//print_list(in);
+			//printf("BLah\n");
+			*user_list = init_USER(user,arrive);
+			//printf("INIT USER\n");
 			min=arrive;
 		}
 		else{
 			test = init(user,job,arrive,dur);
-			 in = insert(in,test);
+			 insert(job_list,test);
 			 insert_USER(user_list,user,arrive);
 			 if(arrive < min){
 			 	min = arrive;
 			 }
 		}
+		printf("%d\n",i );
 		i++;
 	}
-	print_list(in);
-	printf("%s\n",in->next->user );
+print_list(job_list);
+//	printf("%s\n",in->next->user );
 	printf("time 	Job\n");
 	time = min;
-	while(in != NULL){ // while there are still jobs
+	while(*job_list != NULL){ // while there are still jobs
 		//print_list(in);
 		struct node *cur = (struct node *) malloc(sizeof(struct node));
-		cur = in;
+		cur = *job_list;
 		struct node *work = (struct node *) malloc(sizeof(struct node*)); // this is one that should be worked on
 		work = cur;
 		//printf("Going into while loop\n");
@@ -66,7 +71,7 @@ int main(){
 				setTime(user_list,tmp->user,time+1);
 				cur = cur->next;
 				//printf("POP %c \n",tmp->job);
-				pop(&in,tmp->job);
+				pop(job_list,tmp->job);
 
 				//print_list(in);
 				//printf("Done POPing you\n");
@@ -90,6 +95,6 @@ int main(){
 	//free(cur);
 	//free(work);
 	// /free(tmp);
-	delete_list(in);
+	delete_list(job_list);
 	delete_USERlist(user_list);
 }

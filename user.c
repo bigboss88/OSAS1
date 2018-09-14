@@ -9,17 +9,20 @@ struct user* init_USER(char *n,int a){
 	n_user->fir_arr = a;
 	n_user->time = 0;
 	n_user->next = NULL;
+	//printf("Ini user\n");
+	return n_user;
+
 }
 
-int insert_USER(struct user *head,char *u,int a){
-	struct user *cur = head;
+int insert_USER(struct user **head,char *u,int a){
+	struct user *cur = *head;
 	struct user *prev = cur;
 	while(cur != NULL){
 		if(strcmp(cur->name,u)==0){return 0;} //This user is already in the list
 		prev =  cur;
 		cur = cur->next;
 	}
-	cur = head;
+	cur = *head;
 	prev = NULL;
 	struct user *nuser = init_USER(u,a);
 	//Now actually start the insert since we know it's a new user sorted based on arrive time
@@ -34,8 +37,8 @@ int insert_USER(struct user *head,char *u,int a){
 	}
 
 	if(prev == NULL){ // add to front 
-		nuser->next = head;
-		head = nuser;
+		nuser->next = *head;
+		*head = nuser;
 		return 1;
 	}
 
@@ -52,18 +55,19 @@ int insert_USER(struct user *head,char *u,int a){
 	return 0; //something went wrong
 }
 
-void delete_USERlist(struct user *head){
-	struct user* temp;
-	while(head!=NULL){
-		temp =head;
-		head = head->next;
-		free(temp);
+void delete_USERlist(struct user **head){
+	struct user* cur = *head;
+	struct user *tmp;
+	while(cur!=NULL){
+		tmp = cur->next;
+		free(cur);
+		cur=tmp;
 	}
-	free(head);
+	*head=NULL;
 }
 
-int setTime(struct user *head,char *n, int time){
-		struct user *cur = head;
+int setTime(struct user **head,char *n, int time){
+		struct user *cur = *head;
 		struct user *prev = cur;
 		while(cur != NULL){
 		if(strcmp(cur->name,n)==0){break;} //This user is already in the list
@@ -75,8 +79,8 @@ int setTime(struct user *head,char *n, int time){
 	cur->time = time;
 }
 
-void print_USERlist(struct user *head){
-	struct user *cur = head;
+void print_USERlist(struct user **head){
+	struct user *cur = *head;
 	while(cur!=NULL){
 		printf("%s %d \n",cur->name,cur->time);
 		cur=cur->next;
